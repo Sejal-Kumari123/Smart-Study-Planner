@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Study Planner</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles/themes.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- Optional: Feather icons for simple, clean icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="light-theme">
+    <!-- Gradient overlay for better UI -->
+    <div class="bg-gradient"></div>
+
+    <!-- Login Overlay -->
+    <div id="login-overlay">
+        <div class="login-box">
+            <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+                <div style="background: rgba(99, 102, 241, 0.1); padding: 1rem; border-radius: 50%;">
+                    <i data-feather="book-open" style="width: 32px; height: 32px; color: var(--primary-color);"></i>
+                </div>
+            </div>
+            <h1 style="font-size: 1.5rem; color: var(--text-color); margin-bottom: 1.5rem; font-weight: 700;">Smart Study Planner</h1>
+            
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab active" id="tab-login">Log In</button>
+                <button type="button" class="auth-tab" id="tab-signup">Sign Up</button>
+            </div>
+            
+            <form id="auth-form">
+                <div class="form-group" style="text-align: left;">
+                    <label for="auth-username" style="font-size: 0.85rem; font-weight: 600;">Username or Email</label>
+                    <input type="text" id="auth-username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label for="auth-password" style="font-size: 0.85rem; font-weight: 600;">Password</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;" id="btn-auth-submit">Log In</button>
+            </form>
+            <p id="auth-error" style="color: var(--accent-color); margin-top: 1rem; font-size: 0.85rem; display: none; background: rgba(236, 72, 153, 0.1); padding: 0.5rem; border-radius: 6px;">Incorrect username or password.</p>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i data-feather="book-open"></i>
+                <span>Study Planner</span>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item active" data-target="dashboard-view">
+                    <i data-feather="grid"></i>
+                    Dashboard
+                </li>
+                <li class="nav-item" data-target="subjects-view">
+                    <i data-feather="book"></i>
+                    Subjects
+                </li>
+                <li class="nav-item" data-target="timetable-view">
+                    <i data-feather="clock"></i>
+                    Revision Timetable
+                </li>
+                <li class="nav-item" data-target="profile-view">
+                    <i data-feather="user"></i>
+                    Profile
+                </li>
+            </ul>
+
+            <div class="theme-toggle-container" style="margin-top: auto;">
+                <span class="flex items-center gap-4"><i data-feather="moon"></i> Dark Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Dashboard View -->
+            <section id="dashboard-view" class="view-section active">
+                <header>
+                    <h1 id="dashboard-greeting">Welcome back! 👋</h1>
+                    <p class="subtitle" id="motivational-quote">"Success is the sum of small efforts, repeated day in and day out."</p>
+                </header>
+
+                <div class="dashboard-grid">
+                    <!-- Progress Card -->
+                    <div class="card">
+                        <h2>Overall Progress</h2>
+                        <div class="flex items-center justify-between">
+                            <span style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">45%</span>
+                            <span>9/20 Chapters</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: var(--bg-color); border-radius: 4px; margin-top: 1rem;">
+                            <div style="width: 45%; height: 100%; background: var(--primary-color); border-radius: 4px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Timer Card -->
+                    <div class="card" style="text-align: center;">
+                        <h2>Timer</h2>
+                        <div id="timer-display" style="font-size: 3rem; font-weight: 700; font-variant-numeric: tabular-nums; margin: 1rem 0;">25:00</div>
+                        <div class="flex justify-between gap-4">
+                            <button id="timer-start" class="btn btn-primary" style="flex: 1;">Start</button>
+                            <button id="timer-reset" class="btn" style="flex: 1; border: 1px solid var(--border-color);">Reset</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Streak Card -->
+                    <div class="card">
+                        <h2>Study Streak 🔥</h2>
+                        <p style="font-size: 3rem; font-weight: 700; margin: 0.5rem 0;">3 Days</p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Keep it up! Your exams are approaching.</p>
+                    </div>
+                </div>
+
+                <h2>Today's Timetable</h2>
+                <div class="dashboard-grid" id="today-schedule-container" style="gap: 1rem;">
+                    <p style="color: var(--text-muted); grid-column: 1/-1;">No revision blocks added for today. Go to the Timetable tab!</p>
+                </div>
+                
+                <div id="revision-suggestions-container" style="display: none; margin-top: 2rem;">
+                    <h2>Urgent Revision Alert <span style="color: var(--accent-color);">🚨</span></h2>
+                    <div class="card" id="revision-content" style="background: rgba(236, 72, 153, 0.05); border-color: rgba(236, 72, 153, 0.2);">
+                        <p>You have exams coming up in less than 7 days! Prioritize active recall and past papers.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Subjects View -->
+            <section id="subjects-view" class="view-section">
+                <h1>Subject Manager</h1>
+                <p class="subtitle">Track your syllabus, exam dates, and progress.</p>
+                
+                <div class="card" style="max-width: 600px; margin-bottom: 2rem;">
+                    <h2>Add New Subject</h2>
+                    <form id="add-subject-form">
+                        <div class="form-group">
+                            <label for="subject-name">Subject Name</label>
+                            <input type="text" id="subject-name" placeholder="e.g., Mathematics" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="total-chapters">Total Chapters</label>
+                            <input type="number" id="total-chapters" min="1" placeholder="e.g., 15" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exam-date">Exam Date</label>
+                            <input type="date" id="exam-date" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Subject</button>
+                    </form>
+                </div>
+
+                <h2>Your Subjects</h2>
+                <div class="dashboard-grid" id="subjects-list">
+                    <!-- Dynamic Subjects will appear here -->
+                </div>
+            </section>
+
+            <!-- Timetable / Revision Planner View -->
+            <section id="timetable-view" class="view-section">
+                <h1>Revision Timetable</h1>
+                <p class="subtitle">Manually schedule time blocks for your subjects.</p>
+
+                <div class="card" style="max-width: 600px; margin-bottom: 2rem;">
+                    <h2>Add Time Block</h2>
+                    <form id="add-timetable-form">
+                        <div class="form-group">
+                            <label for="time-day">Day</label>
+                            <select id="time-day" required>
+                                <option value="Today">Today</option>
+                                <option value="Tomorrow">Tomorrow</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="form-group" style="flex: 1;">
+                                <label for="time-start">Start Time</label>
+                                <input type="time" id="time-start" required>
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label for="time-end">End Time</label>
+                                <input type="time" id="time-end" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="time-task">Task / Subject to Revise</label>
+                            <input type="text" id="time-task" placeholder="e.g., Mathematics - Chapter 4 Past Papers" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Add to Timetable</button>
+                    </form>
+                </div>
+
+                <h2>Your Schedule</h2>
+                <div id="full-timetable-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Timetable blocks will render here -->
+                </div>
+            </section>
+
+            <!-- Profile View -->
+            <section id="profile-view" class="view-section">
+                <h1>User Profile</h1>
+                <p class="subtitle">Manage your account settings.</p>
+
+                <div class="dashboard-grid">
+                    <!-- Profile Card -->
+                    <div class="card">
+                        <h2>Account Settings</h2>
+                        <form id="update-profile-form">
+                            <div class="form-group">
+                                <label for="profile-username">Username / Email</label>
+                                <input type="text" id="profile-username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password">Update Password</label>
+                                <input type="password" id="new-password" placeholder="Enter new password to change">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2rem; border-color: rgba(236, 72, 153, 0.3); background: rgba(236, 72, 153, 0.05);">
+                    <h2>Session</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem;">Log out of your current session. You will need your password to access your planner again.</p>
+                    <button id="btn-logout" class="btn btn-accent flex items-center gap-4">
+                        <i data-feather="log-out"></i> Logout
+                    </button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Initialize Icons -->
+    <script>
+      feather.replace();
+    </script>
+
+    <!-- App Scripts (Load Order Matters) -->
+    <script src="js/storage.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
